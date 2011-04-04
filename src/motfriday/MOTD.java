@@ -4,7 +4,7 @@ import org.bukkit.util.config.Configuration;
 
 public class MOTD implements Runnable{
 	String message;
-	boolean isRunning;
+	boolean stopped;
 	MOTFriday plugin;
 	Thread motdThread;
 	
@@ -12,21 +12,15 @@ public class MOTD implements Runnable{
 		Configuration config = pl.getConfiguration();
 		message = config.getString("MOTD");
 		plugin = pl;
-		motdThread = new Thread(this);
+		stopped = false;
 	}
-	
-	public void startMOTD(){
-		motdThread.start();
-	}
-	
 	public void stopMOTD(){
-		isRunning = false;
+		stopped = true;
 		//Stop the thread somehow
 	}
 	
 	public void run(){
-		isRunning = true;
-		while(isRunning){
+		while(!stopped){
 			plugin.getServer().broadcastMessage(message);
 			try {
 				Thread.sleep(1000);
